@@ -1,0 +1,10 @@
+version: '3.1'
+services:
+    selenium:
+        image: selenium/standalone-edge
+        ports:
+            - 4444:4444
+        environment:
+            SE_NODE_MAX_SESSIONS: 16
+        networks:
+            - airflow
