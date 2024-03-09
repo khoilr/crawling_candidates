@@ -4,7 +4,7 @@ from airflow.decorators import dag, task
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from pendulum import datetime
 from psycopg2 import sql
-
+from datetime import datetime
 from include.tasks.extractors.careerviet import extract_careerviet
 from include.tasks.extractors.myjobvn import extract_myjobvn
 from include.tasks.transformers.careerviet import transform_careerviet
@@ -117,7 +117,7 @@ def candidate():
         concatenated_df = pd.concat(dfs)
 
         # Save the concatenated DataFrame to a CSV file
-        concatenated_df.to_csv("candidates.csv", index=False)
+        concatenated_df.to_csv(f"outputs/candidates_{datetime.now().isoformat()}.csv", index=False)
 
         # Call the loader function to load the data
         loader(concatenated_df)

@@ -23,3 +23,7 @@ services:
         networks:
             - airflow
         shm_size: 2gb
+
+    scheduler:
+        volumes:
+            - ./outputs:/usr/local/airflow/outputs

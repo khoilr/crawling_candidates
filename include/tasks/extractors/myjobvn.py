@@ -6,6 +6,7 @@ from airflow.decorators import task
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
+MAX_PAGES = 30
 candidates = []
 BASE_URL = "http://www.myjob.vn"
 
@@ -102,7 +103,7 @@ async def pre_scrape():
     # Loop through pages
     while True:
         # Comment those two lines to scrape all pages
-        if page > 30:
+        if MAX_PAGES and page > MAX_PAGES:
             break
 
         # Log the current page being scraped
