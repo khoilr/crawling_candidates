@@ -27,28 +27,6 @@ def get_page_content(page: int):
     response = requests.get(url)
 
     # Parse the response content using BeautifulSoup
-    content = BeautifulSoup(response.content, "html.parser")
-
-    return content
-
-
-def get_page_content(page: int):
-    """
-    Retrieves the content of a specific page from a website.
-
-    Args:
-        page (int): The page number to retrieve.
-
-    Returns:
-        BeautifulSoup: The parsed HTML content of the page.
-    """
-    # Construct the URL for the specific page
-    url = f"{BASE_URL}/ho-so/page-{page}.html"
-
-    # Send a GET request to the URL and retrieve the response
-    response = requests.get(url)
-
-    # Parse the response content using BeautifulSoup
     return BeautifulSoup(response.content, "html.parser")
 
 

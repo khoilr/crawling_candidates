@@ -35,8 +35,14 @@ def get_candidates(trs):
         # Extract candidate information
         candidate = tr.find_element(By.CSS_SELECTOR, "td:first-child")
         job_title = candidate.find_element(By.CSS_SELECTOR, "a.job-title").text.strip()
-        name = candidate.find_element(By.CSS_SELECTOR, "a.name").text.split("#")[0].strip()
-        literacy = candidate.find_element(By.CSS_SELECTOR, "ul.info-list li:first-child").text.split(":")[1].strip()
+        name = (
+            candidate.find_element(By.CSS_SELECTOR, "a.name").text.split("#")[0].strip()
+        )
+        literacy = (
+            candidate.find_element(By.CSS_SELECTOR, "ul.info-list li:first-child")
+            .text.split(":")[1]
+            .strip()
+        )
 
         experience = tr.find_element(By.CSS_SELECTOR, "td:nth-child(2)").text.strip()
         salary = tr.find_element(By.CSS_SELECTOR, "td:nth-child(3)").text.strip()
@@ -78,10 +84,14 @@ async def scrape(from_page: int, to_page: int):
         # Iterate over the range of pages
         for page in range(from_page, to_page + 1):
             # Visit the CareerViet page for the specific page number
-            driver.get(f"https://careerviet.vn/vi/tim-ung-vien/nganh-nghe/cntt-phan-mem/sort/date_desc/page/{page}")
+            driver.get(
+                f"https://careerviet.vn/vi/tim-ung-vien/nganh-nghe/cntt-phan-mem/sort/date_desc/page/{page}"
+            )
 
             # Find the candidates table on the page
-            candidates_table = driver.find_element(By.CSS_SELECTOR, "div.table-jobs-posting table")
+            candidates_table = driver.find_element(
+                By.CSS_SELECTOR, "div.table-jobs-posting table"
+            )
 
             # Find all the rows in the table
             trs = candidates_table.find_elements(By.CSS_SELECTOR, "tbody tr")
@@ -116,10 +126,14 @@ def get_total_pages() -> int:
         )
 
         # Open the CareerViet website and navigate to the first page
-        driver.get("https://careerviet.vn/vi/tim-ung-vien/nganh-nghe/cntt-phan-mem/sort/date_desc/page/1")
+        driver.get(
+            "https://careerviet.vn/vi/tim-ung-vien/nganh-nghe/cntt-phan-mem/sort/date_desc/page/1"
+        )
 
         # Get the total number of candidates from the website
-        total_candidates = driver.find_element(By.CSS_SELECTOR, "div.right-heading strong:last-child").text
+        total_candidates = driver.find_element(
+            By.CSS_SELECTOR, "div.right-heading strong:last-child"
+        ).text
 
         # Convert the total number of candidates to an integer
         total_candidates = int(total_candidates.replace(",", ""))
