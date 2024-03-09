@@ -1,49 +1,28 @@
-Overview
-========
+# QODE assignment interview for Data Engineer (crawling focus)
 
-Welcome to Astronomer! This project was generated after you ran 'astro dev init' using the Astronomer CLI. This readme describes the contents of the project, as well as how to run Apache Airflow on your local machine.
+## Pre-requisites
 
-Project Contents
-================
+- [Docker](https://docs.docker.com/engine/install/)
+- [Astro CLI](https://docs.astronomer.io/astro/cli/install-cli)
 
-Your Astro project contains the following files and folders:
+### How to run
 
-- dags: This folder contains the Python files for your Airflow DAGs. By default, this directory includes two example DAGs:
-    - `example_dag_basic`: This DAG shows a simple ETL data pipeline example with three TaskFlow API tasks that run daily.
-    - `example_dag_advanced`: This advanced DAG showcases a variety of Airflow features like branching, Jinja templates, task groups and several Airflow operators.
-- Dockerfile: This file contains a versioned Astro Runtime Docker image that provides a differentiated Airflow experience. If you want to execute other commands or overrides at runtime, specify them here.
-- include: This folder contains any additional files that you want to include as part of your project. It is empty by default.
-- packages.txt: Install OS-level packages needed for your project by adding them to this file. It is empty by default.
-- requirements.txt: Install Python packages needed for your project by adding them to this file. It is empty by default.
-- plugins: Add custom or community plugins for your project to this file. It is empty by default.
-- airflow_settings.yaml: Use this local-only file to specify Airflow Connections, Variables, and Pools instead of entering them in the Airflow UI as you develop DAGs in this project.
+### Difficulties
 
-Deploy Your Project Locally
-===========================
+- To make sure Selenium can run on your machine, I used Selenium Grid in Docker by writing `docker-compose.override.yml`. By default, Selenium Grid has a maximum sessions is one, and a timeout is 300, this is not enough for scraping efficiently and quickly, so I need to override those values by defining environment variables. Also, I need to config `networks` to work with my Airflow
 
-1. Start Airflow on your local machine by running 'astro dev start'.
+- At first, I could not run concurrently in `extract` task, after some investigation, I found out that Selenium Webdriver methods are not designed to work with asyncio, they block operations that don't release control back to the event loop until they're done. So I need to run the WebDriver methods in a separate thread to prevent them from blocking the event loop. You can find the block code of the solution in the `include/tasks/careerviet.py` file.
 
-This command will spin up 4 Docker containers on your machine, each for a different Airflow component:
+    ```python
+    driver = await trio.to_thread.run_sync(
+            webdriver.Remote,
+            "http://selenium:4444",
+            True,
+            None,
+            webdriver.EdgeOptions(),
+        )
+    ```
 
-- Postgres: Airflow's Metadata Database
-- Webserver: The Airflow component responsible for rendering the Airflow UI
-- Scheduler: The Airflow component responsible for monitoring and triggering tasks
-- Triggerer: The Airflow component responsible for triggering deferred tasks
+### Notes
 
-2. Verify that all 4 Docker containers were created by running 'docker ps'.
-
-Note: Running 'astro dev start' will start your project with the Airflow Webserver exposed at port 8080 and Postgres exposed at port 5432. If you already have either of those ports allocated, you can either [stop your existing Docker containers or change the port](https://docs.astronomer.io/astro/test-and-troubleshoot-locally#ports-are-not-available).
-
-3. Access the Airflow UI for your local Airflow project. To do so, go to http://localhost:8080/ and log in with 'admin' for both your Username and Password.
-
-You should also be able to access your Postgres Database at 'localhost:5432/postgres'.
-
-Deploy Your Project to Astronomer
-=================================
-
-If you have an Astronomer account, pushing code to a Deployment on Astronomer is simple. For deploying instructions, refer to Astronomer documentation: https://docs.astronomer.io/cloud/deploy-code/
-
-Contact
-=======
-
-The Astronomer CLI is maintained with love by the Astronomer team. To report a bug or suggest a change, reach out to our support.
+For demonstration purposes, I limited only scrape 30 first pages of each website. There is a block of code where you can get the total number of pages and remove the limit.

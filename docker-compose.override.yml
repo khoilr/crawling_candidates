@@ -1,10 +1,13 @@
 version: '3.1'
 services:
     selenium:
-        image: selenium/standalone-edge
+        image: selenium/standalone-chrome
         ports:
             - 4444:4444
         environment:
-            SE_NODE_MAX_SESSIONS: 16
+            SE_NODE_OVERRIDE_MAX_SESSIONS: true
+            SE_NODE_MAX_SESSIONS: 8
+            SE_NODE_SESSION_TIMEOUT: 3600
         networks:
             - airflow
+        shm_size: 4gb
