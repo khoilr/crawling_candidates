@@ -1,8 +1,8 @@
-# QODE assignment interview for Data Engineer (crawling focus)
+# Crawling Candidates from Vietnamese Jobs Platforms
 
 ## Description
 
-This project is designed as a part of the interview process for a Data Engineer position at QODE, with a focus on web crawling. The main codebase resides in the `dags` and `include` directories.
+The main codebase resides in the `dags` and `include` directories.
 
 The project utilizes Docker for containerization, ensuring a consistent and reproducible environment across different platforms. It also uses the Astronomer CLI, a command-line interface that allows you to run Apache Airflow DAGs (Directed Acyclic Graphs) in an isolated environment.
 
@@ -74,7 +74,7 @@ The `candidate.py` script defines a Directed Acyclic Graph (DAG) for an Apache A
 
 8. After the scraping process is finished, you can see the CSV file in the `outputs` directory. You can also see the data in the PostgreSQL database with
    - Host `localhost`
-   - Port `5432`
+   - Port `5431`
    - Username `postgres`
    - Password `postgres`
    - Database `postgres`
